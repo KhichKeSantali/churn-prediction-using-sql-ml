@@ -7,7 +7,4 @@
     <orderEntry type="jdk" jdkName="Python 3.13 (churn-prediction-using-sql-ml)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
-  <component name="ReSTService">
-    <option name="DOC_DIR" value="C:\Users\jagno\PycharmProjects\churn-prediction-using-sql-ml" />
-  </component>
 </module>
