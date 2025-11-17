@@ -1,5 +1,6 @@
 import os
 from config import DATABASE_PATH
+from config import PROJECT_ROOT
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
@@ -10,6 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import joblib
 
 # Load Cleaned Data from Database
 db_path = os.path.join(os.getcwd(),'..', 'data', 'cleaned_customers.csv')
@@ -66,10 +68,43 @@ plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.show()
 
+
 # Save results to database
 engine = create_engine(f'sqlite:///{DATABASE_PATH}')
 results_df.to_sql('model_performance', con=engine, if_exists='replace', index=False)
 print("Model performance results saved to database.")
+
+# Save the best model
+
+# Create models directory if it doesn't exist
+project = PROJECT_ROOT
+models_dir = os.path.join(project, 'models')
+
+os.makedirs(models_dir, exist_ok=True)
+
+# Paths for saving models
+model_path = os.path.join(models_dir, 'churn_model.pkl')
+preprocessor_path = os.path.join(models_dir, 'preprocessor.pkl')
+columns_path = os.path.join(models_dir, 'feature_columns.pkl')
+
+# Save Model
+if rf_results['F1 Score'] >= log_results['F1 Score']:
+    model = rf_model
+else:
+    model = log_model
+joblib.dump(model, model_path)
+
+# Save preprocessor and model
+joblib.dump(scaler, preprocessor_path)
+
+# Save feature columns
+joblib.dump(list(x_train.columns), columns_path)
+
+print(f"Best model saved to {model_path}")
+
+
+
+
 
 
 
